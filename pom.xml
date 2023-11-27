@@ -15,6 +15,12 @@
 
   <properties>
     <java.version>17</java.version>
+
+    <!-- SonarQube properties -->
+    <sonar.projectKey>task-management-system</sonar.projectKey>
+    <sonar.projectName>task-management-system</sonar.projectName>
+    <sonar.host.url>http://localhost:9000</sonar.host.url>
+    <sonar.login>sqp_1d331e503727c363d9e8606eb37aea1a17236d6c</sonar.login>
   </properties>
 
   <dependencies>
@@ -42,6 +48,33 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
+
+      <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.7</version>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>prepare-agent</goal>
+                    </goals>
+                </execution>
+                <!-- attached to Maven test phase -->
+                <execution>
+                    <id>report</id>
+                    <phase>test</phase>
+                    <goals>
+                        <goal>report</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+
+        <plugin>
+            <groupId>org.sonarsource.scanner.maven</groupId>
+            <artifactId>sonar-maven-plugin</artifactId>
+            <version>3.9.0.2155</version>
+        </plugin>
     </plugins>
   </build>
 

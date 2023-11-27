@@ -1,0 +1,4 @@
+com\example\controller\TaskControllerTest.class
+com\example\service\TaskServiceTest.class
+com\example\TaskManagementSystemApplicationTests.class
+com\example\model\TaskTest.class
