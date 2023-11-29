@@ -1,6 +1,9 @@
 pipeline {
     agent any
-
+    tools {
+        maven 'jenkins-maven'
+    }
+    
     stages {
         stage('SonarQube Analysis') {
             steps {
