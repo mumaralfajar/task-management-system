@@ -3,17 +3,21 @@ pipeline {
     tools {
         maven 'jenkins-maven'
     }
-    
+
     stages {
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh 'mvn clean install'
-                    sh 'mvn clean package verify sonar:sonar'
-                    echo 'SonarQube Analysis Completed'
+                script {
+                    def scannerHome = tool 'sonar-scanner'
+                    withEnv(["PATH+SONAR_SCANNER=${scannerHome}/bin"]) {
+                        sh 'mvn clean install'
+                        sh 'mvn clean package'
+                        sh 'sonar-scanner'
+                    }
                 }
             }
         }
+
         stage("Quality Gate") {
             steps {
                 waitForQualityGate abortPipeline: true
