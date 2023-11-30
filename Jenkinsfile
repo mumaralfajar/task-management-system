@@ -2,8 +2,6 @@ pipeline {
     agent any
     tools {
         maven 'jenkins-maven'
-        // Make sure the tool name matches the one configured in global tool configuration
-        scanner 'SonarQube'
     }
     
     stages {
@@ -22,8 +20,7 @@ pipeline {
 
         stage("Quality Gate") {
             steps {
-                // Use the correct tool name for SonarQube Scanner
-                waitForQualityGate abortPipeline: true, scannerName: 'SonarQube'
+                waitForQualityGate abortPipeline: true
                 echo 'Quality Gate Completed'
             }
         }
