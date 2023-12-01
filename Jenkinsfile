@@ -3,6 +3,11 @@ pipeline {
     tools {
         maven 'jenkins-maven'
     }
+    environment {
+        BUILD_NUMBER_ENV = "${env.BUILD_NUMBER}"
+        TEXT_SUCCESS_BUILD = "[#${env.BUILD_NUMBER}] Project: ${JOB_NAME} build Success"
+        TEXT_FAILURE_BUILD = "[#${env.BUILD_NUMBER}] Project: ${JOB_NAME} build Failure"
+    }
     
     stages {
         stage('SonarQube Analysis') {
@@ -18,6 +23,23 @@ pipeline {
             steps {
                 waitForQualityGate abortPipeline: true
                 echo 'Quality Gate Completed'
+            }
+        }
+    }
+
+    post {
+        success {
+            script{
+                 withCredentials([string(credentialsId: 'tele-token', variable: 'TOKEN'), string(credentialsId: 'tele-chat-id', variable: 'CHAT_ID')]) {
+                    sh ' curl -s -X POST https://api.telegram.org/bot"$TOKEN"/sendMessage -d chat_id="$CHAT_ID" -d text="$TEXT_SUCCESS_BUILD" '
+                 }
+            }
+        }
+        failure {
+            script{
+                withCredentials([string(credentialsId: 'tele-token', variable: 'TOKEN'), string(credentialsId: 'tele-chat-id', variable: 'CHAT_ID')]) {
+                    sh ' curl -s -X POST https://api.telegram.org/bot"$TOKEN"/sendMessage -d chat_id="$CHAT_ID" -d text="$TEXT_FAILURE_BUILD" '
+                }
             }
         }
     }
